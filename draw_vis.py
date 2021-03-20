@@ -400,7 +400,7 @@ def draw_datapoints(svg, datapoints):
         else:
             fmt_per = f"{100 * d_ratio:.1f}%"
         label_content = ET.fromstring(Rf"""
-        <tspan>{xmlescape(dp.label)} / {fmt_per}</tspan>
+        <tspan>{xmlescape(dp.label)} | {fmt_per}</tspan>
         """
         )
         label_textpath.append(label_content)
@@ -536,7 +536,7 @@ R"""
     global_perc = FakeClass(datapoints).fraction_filled
     center_text = ET.fromstring(Rf'''
 <text text-anchor="middle" dominant-baseline="middle" class="label_all">
-    <tspan>{xmlescape(label_all)} / {100 * global_perc:.1f}%</tspan>
+    <tspan>{xmlescape(label_all)} | {100 * global_perc:.1f}%</tspan>
 </text>
 ''')
     svg.append(center_text)
