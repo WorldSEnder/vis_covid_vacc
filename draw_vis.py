@@ -121,6 +121,14 @@ def model_people_vacc(country):
         return latest_with_shots["total_vaccinations"] / 2
     return None
 
+def xmlescape(data):
+    """format usage in format strings only!!!"""
+    from xml.sax.saxutils import escape
+    return escape(data, entities={
+        "'": "&apos;",
+        "\"": "&quot;"
+    })
+
 class Datapoint():
     @property
     def hash(self):
@@ -237,7 +245,9 @@ class FakeClass(Datapoint):
         if len(self._standins) == 1:
             return self._standins[0].label
         (s1, s2, *rest) = self._standins
-        return ", ".join((s1.label, s2.label)) + ", etc." if rest else ""
+        if rest:
+            return ", ".join((s1.label, s2.label, "etc."))
+        return f"{s1.label} & {s2.label}"
 
     @property
     def hash(self):
@@ -280,14 +290,10 @@ def bunch_datapoints(datapoints, inner_radius, radian_size):
     is at most 1/5th of one datapoint.
     """
     spacing_radians = asin(SPACING_SIZE / inner_radius)
-    # sort all countries with unavailable data to the back
     datapoints = sorted(
-        sorted(
-            datapoints,
-            key=lambda d: d.size,
-            reverse=True,
-        ),
-        key=lambda d: d.fraction_filled is None,
+        datapoints,
+        key=lambda d: d.size,
+        reverse=True,
     )
     data_size = sum(d.size for d in datapoints)
     def calc_radian_per_size(datacount):
@@ -383,7 +389,7 @@ def draw_datapoints(svg, datapoints):
         else:
             fmt_per = f"{100 * d_ratio:.1f}%"
         label_content = ET.fromstring(Rf"""
-        <tspan>{dp.label} / {fmt_per}</tspan>
+        <tspan>{xmlescape(dp.label)} / {fmt_per}</tspan>
         """
         )
         label_textpath.append(label_content)
@@ -519,7 +525,7 @@ R"""
     global_perc = FakeClass(datapoints).fraction_filled
     center_text = ET.fromstring(Rf'''
 <text text-anchor="middle" dominant-baseline="middle" class="label_all">
-    <tspan>{label_all} / {100 * global_perc:.1f}%</tspan>
+    <tspan>{xmlescape(label_all)} / {100 * global_perc:.1f}%</tspan>
 </text>
 ''')
     svg.append(center_text)
@@ -597,6 +603,14 @@ def main():
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Asia"]
     ])
+    svg_south_america = draw_diagram("South America", [
+        Country(c, vacc_data.get(c["iso_code"], None))
+        for c in continents["South America"]
+    ])
+    svg_oce = draw_diagram("Oceania", [
+        Country(c, vacc_data.get(c["iso_code"], None))
+        for c in continents["Oceania"]
+    ])
 
     with open("result_world.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_world))
@@ -610,6 +624,10 @@ def main():
         result_h.write(ET.tostring(svg_africa))
     with open("result_asia.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_asia))
+    with open("result_south_america.svg", "wb") as result_h:
+        result_h.write(ET.tostring(svg_south_america))
+    with open("result_oce.svg", "wb") as result_h:
+        result_h.write(ET.tostring(svg_oce))
 
 if __name__ == "__main__":
     main()
