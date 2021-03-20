@@ -530,7 +530,7 @@ R"""
 ''')
     svg.append(center_text)
 
-    svg.attrib["viewbox"] = f"-{dimension + 10} -{dimension + 30} {dimdim + 20} {dimdim + 80}"
+    svg.attrib["viewBox"] = f"-{dimension + 10} -{dimension + 30} {dimdim + 20} {dimdim + 80}"
 
     return svg
 
