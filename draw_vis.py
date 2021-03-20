@@ -1,6 +1,7 @@
 """Draw covid vaccination data as svg
 """
 import csv
+import glob
 import json
 import textwrap
 from collections import defaultdict
@@ -541,7 +542,9 @@ def main():
             d["iso_code"]: d for d in vacc_reader
         }
 
-    with open("covid-19-data/scripts/scripts/vaccinations/us_states/input/cdc_data_2021-03-19.csv") as states_data_h:
+    latest_cdc_data = sorted(glob.glob("covid-19-data/scripts/scripts/vaccinations/us_states/input/cdc_data_*"))[-1]
+    print(f"Using cdc file {latest_cdc_data}")
+    with open(latest_cdc_data) as states_data_h:
         vacc_usa_reader = csv.DictReader(states_data_h)
         vacc_usa_data = {
             d["LongName"]: d for d in vacc_usa_reader

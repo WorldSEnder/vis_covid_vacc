@@ -12,9 +12,12 @@ required to automatically fetch the date of the data sources.
 You also have to install the `svgexport` npm package. Other svg
 to png converters I tried all failed to convert the `textPath` properly.
 
-# Updating the data and result
+# Updating the data
 
-Run 'python ./draw_vis.py'. Updating the data is best done
-by shallowing updating the covid-19-data, since otherwise
-you'd fetch a few gigabytes of history (the repo is pretty large).
+Run `make update`. Updating the data is best done by shallowing updating
+the covid-19-data, since otherwise you'd fetch a few gigabytes of history
+(the repo is pretty large).
 
+# Generating the visualization
+
+Run `make all`.
