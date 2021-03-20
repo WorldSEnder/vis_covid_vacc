@@ -344,6 +344,14 @@ def draw_datapoints(svg, datapoints):
     total_size = sum(d.size for d in datapoints)
     rads_per_size = 2 * pi / total_size
 
+    total_ratio = FakeClass(datapoints).fraction_filled
+    total_radius = sqrt(total_ratio) * (COUNTRY_SPEC_INNER - STROKES)
+    section_all = ET.Element("circle", attrib={
+        "fill": "#279ee3",
+        "r": f"{total_radius}",
+    })
+    datagroup.append(section_all)
+
     radius_width = COUNTRY_SPEC_WIDTH
     def make_section(radian_start, dp, fill_color, radius_inner):
         radian_size = dp.size * rads_per_size
