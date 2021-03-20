@@ -1,8 +1,5 @@
-.result_touched: draw_vis.py
+result_africa.svg result_asia.svg result_europe.svg result_north_america.svg result_oce.svg result_south_america.svg result_usa.svg result_world.svg &: draw_vis.py
 	python ./draw_vis.py
-	touch .result_touched
-
-%.svg: .result_touched ;
 
 %.png: %.svg
 	npx svgexport $< $@ "svg{background:#f8f8ff;}"
