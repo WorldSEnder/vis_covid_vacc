@@ -6,7 +6,7 @@ import json
 import textwrap
 from collections import defaultdict
 from itertools import cycle
-from math import asin, cos, pi, sin
+from math import asin, cos, pi, sin, sqrt
 
 from lxml import etree as ET
 
@@ -356,8 +356,10 @@ def draw_datapoints(svg, datapoints):
             section_d.attrib["fill"] = "url(#diagonalHatch)"
             datagroup.append(section_d)
         else:
-            outer_radius = radius_inner + radius_width * d_ratio
-            section_d = sector(radius_inner, outer_radius, radian_start, radian_end)
+            # don't use d_ratio directly, be correct about visual area
+            # radius_ratio^2 = ratio * radius_outer^2 + (1-ratio) * radius_inner^2
+            radius_ratio = sqrt(d_ratio * (radius_inner + radius_width) ** 2 + (1 - d_ratio) * radius_inner ** 2)
+            section_d = sector(radius_inner, radius_ratio, radian_start, radian_end)
             r, g, b = fill_color
             section_d.attrib["fill"] = f"#{r:02x}{g:02x}{b:02x}"
             datagroup.append(section_d)
