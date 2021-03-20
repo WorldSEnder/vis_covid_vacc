@@ -172,7 +172,7 @@ class USState(Datapoint):
 
     @property
     def label(self):
-        return self._sdata["Location"]
+        return self._sdata["LongName"]
 
     @property
     def hash(self):
@@ -394,27 +394,47 @@ def draw_datapoints(svg, datapoints):
         radius_children = radius_inner + radius_width + STROKES
         children = bunch_datapoints(dp.children, radius_children, radian_size)
         if len(children) <= 1:
-            return
+            return False
         radian_start_child = radian_start
         for d_child, d_color in zip(children, PALETTE_XGFS_NORMAL12):
             make_section(radian_start_child, d_child, d_color, radius_children)
             radian_start_child += d_child.size * rads_per_size
+        return True
     # start with half a padding
     radian_done = 0.0
     for dp, dcolor in zip(datapoints, PALETTE_XGFS_NORMAL12):
-        sep = seperator(
+        is_nested = make_section(radian_done, dp, dcolor, COUNTRY_SPEC_INNER)
+        sep_before = seperator(
             COUNTRY_SPEC_INNER,
             COUNTRY_SPEC_INNER + COUNTRY_SPEC_WIDTH,
             radian_done
         )
-        svg.append(sep)
-        make_section(radian_done, dp, dcolor, COUNTRY_SPEC_INNER)
         radian_done += dp.size * rads_per_size
+        sep_after = seperator(
+            COUNTRY_SPEC_INNER,
+            COUNTRY_SPEC_INNER + COUNTRY_SPEC_WIDTH,
+            radian_done
+        )
+        if is_nested:
+            svg.append(sep_before)
+            svg.append(sep_after)
     svg.append(datagroup)
     svg.append(labelgroup)
 
+def get_date_of_data():
+    import subprocess
+    git_date = subprocess.run(
+        ["git", "log", "-1", "--format=%cd"],
+        cwd="./covid-19-data/",
+        check=True,
+        capture_output=True
+    )
+    return git_date.stdout.decode('utf-8').strip()
+
 def draw_diagram(label_all, datapoints):
-    svg = ET.Element("svg", xmlns="http://www.w3.org/2000/svg")
+    svg = ET.Element("svg", attrib={
+        "xmlns": "http://www.w3.org/2000/svg",
+    })
     style = ET.fromstring(
 R'''
 <style>
@@ -430,6 +450,9 @@ text {
 }
 .label_all {
     font-size: 18pt;
+}
+a {
+    text-decoration: underline;
 }
 </style>
 '''
@@ -462,7 +485,7 @@ R"""
 
     legend = ET.fromstring(Rf'''
 <text y="{dimension}" class="legend">
-    <tspan x="-{dimension}">Showing number of people fully vaccinated, having received all shots according to each countries chosen vaccine.</tspan>
+    <tspan x="-{dimension}">Showing percentage of people fully vaccinated, having received all shots according to each countries chosen vaccine.</tspan>
     <tspan x="-{dimension}" dy="1.5em">Countries where no data was available are not counted towards a region's percentage.</tspan>
 </text>
     '''
@@ -471,13 +494,32 @@ R"""
     title = ET.fromstring(Rf'''
 <text y="{-dimension}" class="title" text-anchor="middle">
     <tspan x="0">Covid Vaccinations* by Population</tspan>
-    <tspan x="0" dy="1.2em">(*all doses)</tspan>
+    <tspan x="0" dy="1.2em">(*all doses prescribed by the vaccination protocol)</tspan>
 </text>
 ''')
     svg.append(title)
+    date_of_last_commit = get_date_of_data()
+    sources = ET.fromstring(Rf'''
+<text y="{dimension}" class="sources" text-anchor="end">
+    <tspan x="{dimension}">Data source:
+        <a href="https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations">
+            <tspan>https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations</tspan>
+        </a>
+    </tspan>
+    <tspan x="{dimension}" dy="1.2em">Code source:
+        <a href="https://github.com/WorldSEnder/vis_covid_vacc">
+            <tspan>https://github.com/WorldSEnder/vis_covid_vacc</tspan>
+        </a>
+    </tspan>
+    <tspan x="{dimension}" dy="1.2em">Time stamp: {date_of_last_commit}</tspan>
+</text>
+    ''')
+    svg.append(sources)
+
+    global_perc = FakeClass(datapoints).fraction_filled
     center_text = ET.fromstring(Rf'''
 <text text-anchor="middle" dominant-baseline="middle" class="label_all">
-    <tspan>{label_all}</tspan>
+    <tspan>{label_all} / {100 * global_perc:.1f}%</tspan>
 </text>
 ''')
     svg.append(center_text)
@@ -497,7 +539,7 @@ def main():
         vacc_usa_reader = csv.DictReader(states_data_h)
         vacc_usa_data = {
             d["LongName"]: d for d in vacc_usa_reader
-            if d["Location"] not in ("US", "LTC", "VA2", "BP2", "DD2")
+            if d["Location"] not in ("US", "LTC", "VA2", "BP2", "DD2", "IH2")
         }
 
     with open("covid-19-data/scripts/input/owid/continents.csv", "r") as continents_h:
@@ -543,7 +585,10 @@ def main():
     north_america.append(Region("United States", [
         USState(sd) for sd in vacc_usa_data.values()
     ]))
-    svg_america = draw_diagram("North America", north_america)
+    svg_north_america = draw_diagram("North America", north_america)
+    svg_usa = draw_diagram("United States", [
+        USState(sd) for sd in vacc_usa_data.values()
+    ])
     svg_africa = draw_diagram("Africa", [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Africa"]
@@ -557,8 +602,10 @@ def main():
         result_h.write(ET.tostring(svg_world))
     with open("result_europe.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_europe))
-    with open("result_america.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_america))
+    with open("result_north_america.svg", "wb") as result_h:
+        result_h.write(ET.tostring(svg_north_america))
+    with open("result_usa.svg", "wb") as result_h:
+        result_h.write(ET.tostring(svg_usa))
     with open("result_africa.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_africa))
     with open("result_asia.svg", "wb") as result_h:
