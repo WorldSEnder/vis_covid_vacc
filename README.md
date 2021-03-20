@@ -9,6 +9,9 @@ into a svg.
 To run draw_vis.py, you need to have git installed, which is
 required to automatically fetch the date of the data sources.
 
+You also have to install the `svgexport` npm package. Other svg
+to png converters I tried all failed to convert the `textPath` properly.
+
 # Updating the data and result
 
 Run 'python ./draw_vis.py'. Updating the data is best done

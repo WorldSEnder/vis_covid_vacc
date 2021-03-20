@@ -447,7 +447,7 @@ R'''
 text {
     font-family: "Open Sans";
 }
-.legend {
+.legend, .sources {
     font-size: 10pt;
 }
 .title {
@@ -466,7 +466,7 @@ a {
     svg.append(style)
     hatch_pattern = ET.fromstring(
 R"""
-<pattern id="diagonalHatch" width="4" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+<pattern id="diagonalHatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
   <line x1="0" y1="0" x2="0" y2="10" style="stroke:#444; stroke-width:1" />
 </pattern>
 """
@@ -492,7 +492,7 @@ R"""
     legend = ET.fromstring(Rf'''
 <text y="{dimension}" class="legend">
     <tspan x="-{dimension}">Showing percentage of people fully vaccinated, having received all shots according to each countries chosen vaccine.</tspan>
-    <tspan x="-{dimension}" dy="1.5em">Countries where no data was available are not counted towards a region's percentage.</tspan>
+    <tspan x="-{dimension}" dy="1.2em">Countries where no data was available are not counted towards a region's percentage.</tspan>
 </text>
     '''
     )
@@ -506,14 +506,14 @@ R"""
     svg.append(title)
     date_of_last_commit = get_date_of_data()
     sources = ET.fromstring(Rf'''
-<text y="{dimension}" class="sources" text-anchor="end">
+<text y="{dimension}" class="sources" text-anchor="end" xmlns:xlink="http://www.w3.org/1999/xlink">
     <tspan x="{dimension}">Data source:
-        <a href="https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations">
+        <a xlink:href="https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations">
             <tspan>https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations</tspan>
         </a>
     </tspan>
     <tspan x="{dimension}" dy="1.2em">Code source:
-        <a href="https://github.com/WorldSEnder/vis_covid_vacc">
+        <a xlink:href="https://github.com/WorldSEnder/vis_covid_vacc">
             <tspan>https://github.com/WorldSEnder/vis_covid_vacc</tspan>
         </a>
     </tspan>
