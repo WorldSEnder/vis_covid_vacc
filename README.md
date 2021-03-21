@@ -1,8 +1,10 @@
 # A visualization of covid vaccination status
 
-Does not us a nice visualization library, since the used
+Does not use a nice visualization library, since the used
 sunburst chart was not available. Instead, just dumps everything
 into a svg.
+
+<img alt="Sample result" src="https://i.imgur.com/yAJFUJF.png" width="700" />
 
 # Requirements
 
