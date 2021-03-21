@@ -237,7 +237,11 @@ class Region(Datapoint):
 
 class FakeClass(Datapoint):
     def __init__(self, standins):
-        self._standins = standins
+        self._standins = sorted(
+            standins,
+            key=lambda s: 0 if s.fraction_filled is None else s.fraction_filled * s.size,
+            reverse=True,
+        )
 
     @property
     def label(self):
