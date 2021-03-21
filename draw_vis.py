@@ -588,13 +588,13 @@ def main():
     for ctry in countries:
         region = country_to_continent[ctry["iso_code"]]
         continents[region[""]].append(ctry)
+
     svg_world = draw_diagram("Worldwide", [
         Region(r, [
             Country(c, vacc_data.get(c["iso_code"], None))
             for c in cs
         ]) for r,cs in continents.items()
     ])
-
     svg_europe = draw_diagram("Europe", [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Europe"]
