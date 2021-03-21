@@ -502,7 +502,7 @@ R"""
 
     legend = ET.fromstring(Rf'''
 <text y="{dimension}" class="legend">
-    <tspan x="-{dimension}">Showing percentage of people fully vaccinated, having received all shots according to each countries chosen vaccine.</tspan>
+    <tspan x="-{dimension}">* Showing percentage of population fully vaccinated, having received all shots according to each countries chosen vaccine(s).</tspan>
     <tspan x="-{dimension}" dy="1.2em">Countries where no data was available are not counted towards a region's percentage.</tspan>
 </text>
     '''
@@ -510,8 +510,7 @@ R"""
     svg.append(legend)
     title = ET.fromstring(Rf'''
 <text y="{-dimension}" class="title" text-anchor="middle">
-    <tspan x="0">Covid Vaccinations* by Population</tspan>
-    <tspan x="0" dy="1.2em">(*all doses prescribed by the vaccination protocol)</tspan>
+    <tspan x="0">Covid Vaccinations* by Country and Region</tspan>
 </text>
 ''')
     svg.append(title)
