@@ -111,12 +111,12 @@ def model_people_vacc(country):
         d for d in country_data if "total_vaccinations" in d
     ] or [None])[-1]
 
-    if latest_with_full_pop is not None:
-        return latest_with_full_pop["people_fully_vaccinated"]
     if latest_with_vacc is not None:
         # positively biased assumption
         # maybe display with another pattern?
         return latest_with_vacc["people_vaccinated"]
+    if latest_with_full_pop is not None:
+        return latest_with_full_pop["people_fully_vaccinated"]
     if latest_with_shots is not None:
         # divide by two to get a conservative number ...
         return latest_with_shots["total_vaccinations"] / 2
@@ -544,7 +544,7 @@ R"""
 
     legend = ET.fromstring(Rf'''
 <text y="{dimension}" class="legend">
-    <tspan x="-{dimension}">* Showing percentage of population fully vaccinated, having received all shots according to each countries chosen vaccine(s).</tspan>
+    <tspan x="-{dimension}">* Showing percentage of population vaccinated, having received at least one shot of a countries chosen vaccine(s).</tspan>
     <tspan x="-{dimension}" dy="1.2em">Countries where no data was available are not counted towards a region's percentage.</tspan>
 </text>
     '''
@@ -552,7 +552,7 @@ R"""
     svg.append(legend)
     title = ET.fromstring(Rf'''
 <text y="{-dimension}" class="title" text-anchor="middle">
-    <tspan x="0">Covid Vaccinations* by {criteria_label}</tspan>
+    <tspan x="0">Partial Covid Vaccinations* by {criteria_label}</tspan>
 </text>
 ''')
     svg.append(title)
