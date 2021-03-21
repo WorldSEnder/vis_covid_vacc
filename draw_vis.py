@@ -452,7 +452,7 @@ def get_date_of_data():
     )
     return git_date.stdout.decode('utf-8').strip()
 
-def draw_diagram(label_all, datapoints):
+def draw_diagram(label_all, datapoints, criteria_label):
     svg = ET.Element("svg", attrib={
         "xmlns": "http://www.w3.org/2000/svg",
     })
@@ -514,7 +514,7 @@ R"""
     svg.append(legend)
     title = ET.fromstring(Rf'''
 <text y="{-dimension}" class="title" text-anchor="middle">
-    <tspan x="0">Covid Vaccinations* by Country and Region</tspan>
+    <tspan x="0">Covid Vaccinations* by {criteria_label}</tspan>
 </text>
 ''')
     svg.append(title)
@@ -594,11 +594,11 @@ def main():
             Country(c, vacc_data.get(c["iso_code"], None))
             for c in cs
         ]) for r,cs in continents.items()
-    ])
+    ], "Country and Region")
     svg_europe = draw_diagram("Europe", [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Europe"]
-    ])
+    ], "Country")
     north_america = [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["North America"]
@@ -607,26 +607,26 @@ def main():
     north_america.append(Region("United States", [
         USState(sd) for sd in vacc_usa_data.values()
     ]))
-    svg_north_america = draw_diagram("North America", north_america)
+    svg_north_america = draw_diagram("North America", north_america, "Country and US State")
     svg_usa = draw_diagram("United States", [
         USState(sd) for sd in vacc_usa_data.values()
-    ])
+    ], "State")
     svg_africa = draw_diagram("Africa", [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Africa"]
-    ])
+    ], "Country")
     svg_asia = draw_diagram("Asia", [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Asia"]
-    ])
+    ], "Country")
     svg_south_america = draw_diagram("South America", [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["South America"]
-    ])
+    ], "Country")
     svg_oce = draw_diagram("Oceania", [
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Oceania"]
-    ])
+    ], "Country")
 
     with open("result_world.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_world))
