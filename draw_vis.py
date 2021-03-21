@@ -627,6 +627,11 @@ def main():
         Country(c, vacc_data.get(c["iso_code"], None))
         for c in continents["Oceania"]
     ], "Country")
+    svg_middle_east = draw_diagram("Middle East", [
+        Country(c, vacc_data.get(c["iso_code"], None))
+        for c in countries
+        if c["iso_code"] in ("EGY", "TUR", "IRN", "IRQ", "SAU", "YEM", "SYR", "JOR", "ARE", "ISR", "LBN", "PSE", "OMN", "KWT", "QAT", "BHR")
+    ], "Country")
 
     with open("result_world.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_world))
@@ -644,6 +649,8 @@ def main():
         result_h.write(ET.tostring(svg_south_america))
     with open("result_oce.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_oce))
+    with open("result_middle_east.svg", "wb") as result_h:
+        result_h.write(ET.tostring(svg_middle_east))
 
 if __name__ == "__main__":
     main()

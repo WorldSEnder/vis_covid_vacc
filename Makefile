@@ -1,6 +1,7 @@
 RESULT_SVGS := result_africa.svg\
                result_asia.svg\
 			   result_europe.svg\
+			   result_middle_east.svg\
 			   result_north_america.svg\
 			   result_oce.svg\
 			   result_south_america.svg\
