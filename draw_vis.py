@@ -15,9 +15,9 @@ COUNTRY_SPEC_INNER = 200
 # Width of country specific segments segments
 COUNTRY_SPEC_WIDTH = 200
 # Width of spacing between each entry
-SPACING_SIZE = 2.5
+SPACING_SIZE = 1
 ACCEPTABLE_SIZE = 10
-STROKES = 4
+STROKES = 2
 STROKE_COLOR = "#aaa"
 
 def rotate_to_view(phi):
@@ -308,6 +308,7 @@ def bunch_datapoints(datapoints, inner_radius, radian_size):
         # radian_size = data_size * rads_per_size + SPACING_RADIANS * padding_count
         rads_per_size = (radian_size - spacing_radians * padding_count) / data_size
         return rads_per_size
+
     # now do a binary search for a good spacing
     cut = 0
     size_adjust = running_max_size = len(datapoints)
@@ -318,9 +319,8 @@ def bunch_datapoints(datapoints, inner_radius, radian_size):
             # include the 'Other' datapoint!
             datacount += 1
         rads_per_size = calc_radian_per_size(datacount)
-        last_included = datapoints[:cut + size_adjust][-1]
         # spacing_size might be negative, if too many datapoints
-        if last_included.size * rads_per_size * inner_radius > ACCEPTABLE_SIZE:
+        if rads_per_size > 0:
             # would be acceptable
             cut += size_adjust
             size_adjust = running_max_size - cut
@@ -379,38 +379,39 @@ def draw_datapoints(svg, datapoints):
         outer_circle = circle_part(radius_inner + radius_width, radian_start, radian_end)
         svg.append(outer_circle)
 
-        label_outside_in = radian_start + radian_size / 2 > pi
-        overflow = COUNTRY_SPEC_INNER / 2
-        (label_r_start, label_r_end) = (radius_inner - overflow, radius_inner + radius_width + overflow)
-        if label_outside_in:
-            (label_r_start, label_r_end) = (label_r_end, label_r_start)
-        label_path = seperator(
-            label_r_start, label_r_end, radian_start + radian_size / 2
-        )
-        label_id = f"textpath-{dp.hash}"
-        label_path.attrib["id"] = label_id
-        label_defs = ET.Element("defs")
-        label_defs.append(label_path)
-        label_text = ET.Element("text", attrib={
-            "text-anchor": "middle",
-            "dominant-baseline": "middle",
-        })
-        label_textpath = ET.Element("textPath", attrib={
-            "href": f"#{label_id}",
-            "startOffset": "50%",
-        })
-        if d_ratio is None:
-            fmt_per = "(n/a)"
-        else:
-            fmt_per = f"{100 * d_ratio:.1f}%"
-        label_content = ET.fromstring(Rf"""
-        <tspan>{xmlescape(dp.label)} | {fmt_per}</tspan>
-        """
-        )
-        label_textpath.append(label_content)
-        label_text.append(label_textpath)
-        labelgroup.append(label_defs)
-        labelgroup.append(label_text)
+        if radian_size * radius_inner > 10:
+            label_outside_in = radian_start + radian_size / 2 > pi
+            overflow = COUNTRY_SPEC_INNER / 2
+            (label_r_start, label_r_end) = (radius_inner - overflow, radius_inner + radius_width + overflow)
+            if label_outside_in:
+                (label_r_start, label_r_end) = (label_r_end, label_r_start)
+            label_path = seperator(
+                label_r_start, label_r_end, radian_start + radian_size / 2
+            )
+            label_id = f"textpath-{dp.hash}"
+            label_path.attrib["id"] = label_id
+            label_defs = ET.Element("defs")
+            label_defs.append(label_path)
+            label_text = ET.Element("text", attrib={
+                "text-anchor": "middle",
+                "dominant-baseline": "middle",
+            })
+            label_textpath = ET.Element("textPath", attrib={
+                "href": f"#{label_id}",
+                "startOffset": "50%",
+            })
+            if d_ratio is None:
+                fmt_per = "(n/a)"
+            else:
+                fmt_per = f"{100 * d_ratio:.1f}%"
+            label_content = ET.fromstring(Rf"""
+            <tspan>{xmlescape(dp.label)} | {fmt_per}</tspan>
+            """
+            )
+            label_textpath.append(label_content)
+            label_text.append(label_textpath)
+            labelgroup.append(label_defs)
+            labelgroup.append(label_text)
 
         radius_children = radius_inner + radius_width + STROKES
         children = bunch_datapoints(dp.children, radius_children, radian_size)
@@ -548,6 +549,16 @@ R"""
 
     return svg
 
+COUNTRIES_MIDDLE_EAST = (
+      "EGY", "TUR", "IRN", "IRQ", "SAU"
+    , "YEM", "SYR", "JOR", "ARE", "ISR"
+    , "LBN", "PSE", "OMN", "KWT", "QAT"
+    , "BHR")
+
+MIDDLE_EAST_CONT = {
+    "": "Middle East"
+}
+
 def main():
     with open("covid-19-data/public/data/vaccinations/vaccinations.json") as data_h:
         vacc_reader = json.load(data_h)
@@ -567,7 +578,8 @@ def main():
     with open("covid-19-data/scripts/input/owid/continents.csv", "r") as continents_h:
         region_reader = csv.DictReader(continents_h)
         country_to_continent = {
-            c["Code"]: c for c in region_reader
+            c["Code"]: (c if c["Code"] not in COUNTRIES_MIDDLE_EAST else MIDDLE_EAST_CONT)
+            for c in region_reader
         }
 
     with open("covid-19-data/scripts/input/un/population_2020.csv", "r") as pop_h:
@@ -629,8 +641,7 @@ def main():
     ], "Country")
     svg_middle_east = draw_diagram("Middle East", [
         Country(c, vacc_data.get(c["iso_code"], None))
-        for c in countries
-        if c["iso_code"] in ("EGY", "TUR", "IRN", "IRQ", "SAU", "YEM", "SYR", "JOR", "ARE", "ISR", "LBN", "PSE", "OMN", "KWT", "QAT", "BHR")
+        for c in continents["Middle East"]
     ], "Country")
 
     with open("result_world.svg", "wb") as result_h:

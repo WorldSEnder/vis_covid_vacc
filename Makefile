@@ -9,7 +9,7 @@ RESULT_SVGS := result_africa.svg\
 			   result_world.svg
 RESULT_PNGS := $(RESULT_SVGS:.svg=.png)
 
-$(RESULT_SVGS) &: draw_vis.py .setup_done
+$(RESULT_SVGS) &: draw_vis.py .setup_done ./covid-19-data/.git
 	python ./draw_vis.py
 
 %.png: %.svg .setup_done
@@ -18,7 +18,7 @@ $(RESULT_SVGS) &: draw_vis.py .setup_done
 all: $(RESULT_SVGS) $(RESULT_PNGS) ;
 
 update: .setup_done
-	git submodule foreach --recursive git pull --ff-only
+	git submodule foreach --recursive git pull --ff-only --depth 1
 
 .setup_done:
 	npm ci
