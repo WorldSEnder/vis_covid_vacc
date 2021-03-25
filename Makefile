@@ -9,23 +9,25 @@ RESULT_SVGS := result_africa.svg\
 			   result_world.svg
 RESULT_PNGS := $(RESULT_SVGS:.svg=.png)
 
-$(RESULT_SVGS) &: draw_vis.py .setup_done ./covid-19-data/.git
+$(RESULT_SVGS) &: setup ./covid-19-data/.git draw_vis.py
 	python ./draw_vis.py
 
-%.png: %.svg .setup_done
+%.png: %.svg setup
 	npx svgexport $< $@ "svg{background:#f8f8ff;}"
 
-all: $(RESULT_SVGS) $(RESULT_PNGS) ;
+all: setup $(RESULT_SVGS) $(RESULT_PNGS) ;
 
-update: .setup_done
-	git submodule foreach --recursive git pull --ff-only --depth 1
+update: setup
+	git submodule foreach --recursive git fetch --depth 1
+	git submodule foreach --recursive git reset --hard FETCH_HEAD
 
-.setup_done:
+./node_modules/.: package-lock.json
 	npm ci
-	git submodule update --init --recursive
-	touch .setup_done
 
-setup: .setup_done ;
+./covid-19-data/.git:
+	git submodule update --init --recursive --depth 1
+
+setup: ./covid-19-data/.git ./node_modules/. ;
 
 .DEFAULT_GOAL := all
-.PHONY: all update
+.PHONY: all update setup
