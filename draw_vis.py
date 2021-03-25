@@ -505,6 +505,18 @@ a {
 '''
     )
     svg.append(style)
+    font_tag = ET.fromstring(
+R'''
+<style type='text/css'>
+<![CDATA[@font-face{
+  font-family:'Open Sans';src:local('Open Sans')
+             , local('OpenSans')
+             , url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhp.woff2) format('woff2');
+  }]]>
+</style>
+'''
+    )
+    svg.append(font_tag)
     hatch_pattern = ET.fromstring(
 R"""
 <pattern id="diagonalHatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
