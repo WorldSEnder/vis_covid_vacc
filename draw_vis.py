@@ -122,6 +122,9 @@ def model_people_vacc(country):
         return latest_with_shots["total_vaccinations"] / 2
     return None
 
+def model_people_vacc_state(state_data):
+    return int(state_data["Series_Complete_Yes"])
+
 def xmlescape(data):
     """format usage in format strings only!!!"""
     from xml.sax.saxutils import escape
@@ -193,7 +196,7 @@ class USState(Datapoint):
 
     @property
     def fraction_filled(self):
-        people_vacced = int(self._sdata["Series_Complete_Yes"])
+        people_vacced = model_people_vacc_state(self._sdata)
         return people_vacced / self.size
 
     @property
@@ -379,7 +382,8 @@ def draw_datapoints(svg, datapoints):
         outer_circle = circle_part(radius_inner + radius_width, radian_start, radian_end)
         svg.append(outer_circle)
 
-        if radian_size * radius_inner > 10:
+        if radian_size * radius_inner > 4:
+            small_label_size = int(radian_size * radius_inner)
             label_outside_in = radian_start + radian_size / 2 > pi
             overflow = COUNTRY_SPEC_INNER / 2
             (label_r_start, label_r_end) = (radius_inner - overflow, radius_inner + radius_width + overflow)
@@ -395,6 +399,7 @@ def draw_datapoints(svg, datapoints):
             label_text = ET.Element("text", attrib={
                 "text-anchor": "middle",
                 "dominant-baseline": "middle",
+                "class": f"small-label-{small_label_size}" if small_label_size < 10 else "label",
             })
             label_textpath = ET.Element("textPath", attrib={
                 "href": f"#{label_id}",
@@ -472,6 +477,26 @@ text {
 }
 .label_all {
     font-size: 18pt;
+}
+.label {
+}
+.small-label-9 {
+   font-size: 9pt;
+}
+.small-label-8 {
+   font-size: 8pt;
+}
+.small-label-7 {
+   font-size: 7pt;
+}
+.small-label-6 {
+   font-size: 6pt;
+}
+.small-label-5 {
+   font-size: 5pt;
+}
+.small-label-4 {
+   font-size: 4pt;
 }
 a {
     text-decoration: underline;
