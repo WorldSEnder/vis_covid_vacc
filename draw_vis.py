@@ -564,7 +564,7 @@ R"""
 
     global_perc = FakeClass(datapoints).fraction_filled
     center_text = ET.fromstring(Rf'''
-<text text-anchor="middle" dominant-baseline="middle" class="label_all">
+<text text-anchor="middle" dominant-baseline="middle" class="label_all" x="0" y="0">
     <tspan>{xmlescape(label_all)} | {100 * global_perc:.1f}%</tspan>
 </text>
 ''')
