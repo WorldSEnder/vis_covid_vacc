@@ -4,6 +4,8 @@ name: update-results
 on:
   push:
     branches: [ master ]
+    paths:
+      - '**.py'
   schedule:
     - cron: '30 20 * * *'
   # Allows you to run this workflow manually from the Actions tab
