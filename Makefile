@@ -29,7 +29,8 @@ update: $(SETUP_DEPS)
 ./covid-19-data/.git:
 	git submodule update --init --recursive --depth 1
 
-setup: $(SETUP_DEPS) ;
+setup: $(SETUP_DEPS)
+	python -m pip install -r requirements.txt
 
 .DEFAULT_GOAL := all
 .PHONY: all update setup
