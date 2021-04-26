@@ -12,7 +12,7 @@ SETUP_DEPS  := ./covid-19-data/.git\
                ./node_modules/.
 
 $(RESULT_SVGS) &: $(SETUP_DEPS) draw_vis.py
-	python ./draw_vis.py
+	PYTHONHASHSEED=0 python ./draw_vis.py
 
 %.png: %.svg $(SETUP_DEPS)
 	npx svgexport $< $@ "svg{background:#f8f8ff;}"
