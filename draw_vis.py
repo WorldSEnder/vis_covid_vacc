@@ -1,5 +1,6 @@
 """Draw covid vaccination data as svg
 """
+import os
 import csv
 import glob
 import json
@@ -681,23 +682,24 @@ def main():
         for c in continents["Middle East"]
     ], "Country")
 
-    with open("result_world.svg", "wb") as result_h:
+    os.makedirs("results", exist_ok=True)
+    with open("results/world.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_world))
-    with open("result_europe.svg", "wb") as result_h:
+    with open("results/europe.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_europe))
-    with open("result_north_america.svg", "wb") as result_h:
+    with open("results/north_america.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_north_america))
-    with open("result_usa.svg", "wb") as result_h:
+    with open("results/usa.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_usa))
-    with open("result_africa.svg", "wb") as result_h:
+    with open("results/africa.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_africa))
-    with open("result_asia.svg", "wb") as result_h:
+    with open("results/asia.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_asia))
-    with open("result_south_america.svg", "wb") as result_h:
+    with open("results/south_america.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_south_america))
-    with open("result_oce.svg", "wb") as result_h:
+    with open("results/oce.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_oce))
-    with open("result_middle_east.svg", "wb") as result_h:
+    with open("results/middle_east.svg", "wb") as result_h:
         result_h.write(ET.tostring(svg_middle_east))
 
 if __name__ == "__main__":

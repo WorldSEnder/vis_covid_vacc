@@ -1,7 +1,6 @@
-/result*.svg
+/results/*
 /.result_touched
 /.setup_done
-/result*.png
 **/*.experiment.*
 
 node_modules/

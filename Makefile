@@ -1,12 +1,12 @@
-RESULT_SVGS := result_africa.svg\
-               result_asia.svg\
-               result_europe.svg\
-               result_middle_east.svg\
-               result_north_america.svg\
-               result_oce.svg\
-               result_south_america.svg\
-               result_usa.svg\
-               result_world.svg
+RESULT_SVGS := results/africa.svg\
+               results/asia.svg\
+               results/europe.svg\
+               results/middle_east.svg\
+               results/north_america.svg\
+               results/oce.svg\
+               results/south_america.svg\
+               results/usa.svg\
+               results/world.svg
 RESULT_PNGS := $(RESULT_SVGS:.svg=.png)
 SETUP_DEPS  := ./covid-19-data/.git\
                ./node_modules/.

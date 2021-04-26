@@ -24,4 +24,11 @@ jobs:
         make setup
         make update
     - run: make all
-    - run: ls
+    - name: Deploy
+      uses: s0/git-publish-subdir-action@v2.4.0
+      env:
+        REPO: self
+        BRANCH: artifacts
+        FOLDER: results
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
