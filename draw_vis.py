@@ -123,8 +123,40 @@ def model_people_vacc(country):
         return latest_with_shots["total_vaccinations"] / 2
     return None
 
+def model_people_vacc_partial(country):
+    if country is None:
+        return None
+    country_data = country["data"]
+    # just use latest available data
+    # latest available data point for fully vaccinated population
+    latest_with_full_pop = ([
+        d for d in country_data if "people_fully_vaccinated" in d
+    ] or [None])[-1]
+    # latest available data point for initially vaccinated population
+    latest_with_vacc = ([
+        d for d in country_data if "people_vaccinated" in d
+    ] or [None])[-1]
+    # latest available data points for vaccination shots
+    latest_with_shots = ([
+        d for d in country_data if "total_vaccinations" in d
+    ] or [None])[-1]
+
+    if latest_with_vacc is not None:
+        # positively biased assumption
+        # maybe display with another pattern?
+        return latest_with_vacc["people_vaccinated"]
+    if latest_with_full_pop is not None:
+        return latest_with_full_pop["people_fully_vaccinated"]
+    if latest_with_shots is not None:
+        # divide by two to get a conservative number ...
+        return latest_with_shots["total_vaccinations"] / 2
+    return None
+
 def model_people_vacc_state(state_data):
     return int(state_data["Series_Complete_Yes"])
+
+def model_people_vacc_state_partial(state_data):
+    return int(float(state_data["Administered_Dose1_Recip"]))
 
 def xmlescape(data):
     """format usage in format strings only!!!"""
@@ -169,8 +201,12 @@ class Country(Datapoint):
         return self._pop_data["population"]
 
     @property
+    def model_count(self):
+        return model_people_vacc(self._vacc_data)
+
+    @property
     def fraction_filled(self):
-        people_vacced = model_people_vacc(self._vacc_data)
+        people_vacced = self.model_count
         if people_vacced is not None:
             return people_vacced / self.size
         return None
@@ -178,6 +214,11 @@ class Country(Datapoint):
     @property
     def children(self):
         return []
+
+class CountryPartial(Country):
+    @property
+    def model_count(self):
+        return model_people_vacc_partial(self._vacc_data)
 
 class USState(Datapoint):
     def __init__(self, state_data):
@@ -196,13 +237,22 @@ class USState(Datapoint):
         return int(float(self._sdata["Census2019"]))
 
     @property
+    def model_count(self):
+        return model_people_vacc_state(self._sdata)
+
+    @property
     def fraction_filled(self):
-        people_vacced = model_people_vacc_state(self._sdata)
+        people_vacced = self.model_count
         return people_vacced / self.size
 
     @property
     def children(self):
         return []
+
+class USStatePartial(USState):
+    @property
+    def model_count(self):
+        return model_people_vacc_state_partial(self._sdata)
 
 class Region(Datapoint):
     def __init__(self, region, subregions):
@@ -459,7 +509,61 @@ def get_date_of_data():
     )
     return git_date.stdout.decode('utf-8').strip()
 
-def draw_diagram(label_all, datapoints, criteria_label):
+class ModelFull():
+    def __init__(self, criteria_label, label_all, basename):
+        self.criteria_label = criteria_label
+        self.label_all = label_all
+        self.filename = f"results/{basename}.svg"
+
+    def legend(self, dimension):
+        return ET.fromstring(Rf'''
+            <text y="{dimension}" class="legend">
+            <tspan x="-{dimension}">* Showing percentage of population fully vaccinated, having received all shots according to each countries chosen vaccine(s).</tspan>
+            <tspan x="-{dimension}" dy="1.2em">Countries where no data was available are not counted towards a region's percentage.</tspan>
+            </text>
+            '''
+        )
+
+    def title(self, dimension):
+        return ET.fromstring(Rf'''
+            <text y="{-dimension}" class="title" text-anchor="middle">
+                <tspan x="0">Covid Vaccinations* by {self.criteria_label}</tspan>
+            </text>
+            '''
+        )
+
+    @property
+    def timestamp(self):
+        return get_date_of_data()
+
+class ModelPartial():
+    def __init__(self, criteria_label, label_all, basename):
+        self.criteria_label = criteria_label
+        self.label_all = label_all
+        self.filename = f"results/{basename}_partial.svg"
+
+    def legend(self, dimension):
+        return ET.fromstring(Rf'''
+            <text y="{dimension}" class="legend">
+            <tspan x="-{dimension}">* Showing percentage of population vaccinated, having received at least one shot of a countries chosen vaccine(s).</tspan>
+            <tspan x="-{dimension}" dy="1.2em">Countries where no data was available are not counted towards a region's percentage.</tspan>
+            </text>
+            '''
+        )
+
+    def title(self, dimension):
+        return ET.fromstring(Rf'''
+            <text y="{-dimension}" class="title" text-anchor="middle">
+            <tspan x="0">Partial Covid Vaccinations* by {self.criteria_label}</tspan>
+            </text>
+            '''
+        )
+
+    @property
+    def timestamp(self):
+        return get_date_of_data()
+
+def draw_diagram(model, datapoints):
     svg = ET.Element("svg", attrib={
         "xmlns": "http://www.w3.org/2000/svg",
     })
@@ -543,21 +647,8 @@ R"""
     dimension = 2 * COUNTRY_SPEC_WIDTH + COUNTRY_SPEC_INNER + 2 * STROKES + 50
     dimdim = 2 * dimension
 
-    legend = ET.fromstring(Rf'''
-<text y="{dimension}" class="legend">
-    <tspan x="-{dimension}">* Showing percentage of population fully vaccinated, having received all shots according to each countries chosen vaccine(s).</tspan>
-    <tspan x="-{dimension}" dy="1.2em">Countries where no data was available are not counted towards a region's percentage.</tspan>
-</text>
-    '''
-    )
-    svg.append(legend)
-    title = ET.fromstring(Rf'''
-<text y="{-dimension}" class="title" text-anchor="middle">
-    <tspan x="0">Covid Vaccinations* by {criteria_label}</tspan>
-</text>
-''')
-    svg.append(title)
-    date_of_last_commit = get_date_of_data()
+    svg.append(model.legend(dimension))
+    svg.append(model.title(dimension))
     sources = ET.fromstring(Rf'''
 <text y="{dimension}" class="sources" text-anchor="end" xmlns:xlink="http://www.w3.org/1999/xlink">
     <tspan x="{dimension}">Data source:
@@ -570,7 +661,7 @@ R"""
             <tspan>https://github.com/WorldSEnder/vis_covid_vacc</tspan>
         </a>
     </tspan>
-    <tspan x="{dimension}" dy="1.2em">Time stamp: {date_of_last_commit}</tspan>
+    <tspan x="{dimension}" dy="1.2em">Timestamp: {model.timestamp}</tspan>
 </text>
     ''')
     svg.append(sources)
@@ -578,14 +669,15 @@ R"""
     global_perc = FakeClass(datapoints).fraction_filled
     center_text = ET.fromstring(Rf'''
 <text text-anchor="middle" dominant-baseline="middle" class="label_all" x="0" y="0">
-    <tspan>{xmlescape(label_all)} | {100 * global_perc:.1f}%</tspan>
+    <tspan>{xmlescape(model.label_all)} | {100 * global_perc:.1f}%</tspan>
 </text>
 ''')
     svg.append(center_text)
 
     svg.attrib["viewBox"] = f"-{dimension + 10} -{dimension + 30} {dimdim + 20} {dimdim + 80}"
 
-    return svg
+    with open(model.filename, "wb") as result_h:
+        result_h.write(ET.tostring(svg))
 
 COUNTRIES_MIDDLE_EAST = (
       "EGY", "TUR", "IRN", "IRQ", "SAU"
@@ -639,68 +731,64 @@ def main():
         region = country_to_continent[ctry["iso_code"]]
         continents[region[""]].append(ctry)
 
-    svg_world = draw_diagram("Worldwide", [
-        Region(r, [
-            Country(c, vacc_data.get(c["iso_code"], None))
-            for c in cs
-        ]) for r,cs in continents.items()
-    ], "Country and Region")
-    svg_europe = draw_diagram("Europe", [
-        Country(c, vacc_data.get(c["iso_code"], None))
-        for c in continents["Europe"]
-    ], "Country")
-    north_america = [
-        Country(c, vacc_data.get(c["iso_code"], None))
-        for c in continents["North America"]
-        if c["iso_code"] != "USA"
-    ]
-    north_america.append(Region("United States", [
-        USState(sd) for sd in vacc_usa_data.values()
-    ]))
-    svg_north_america = draw_diagram("North America", north_america, "Country and US State")
-    svg_usa = draw_diagram("United States", [
-        USState(sd) for sd in vacc_usa_data.values()
-    ], "State")
-    svg_africa = draw_diagram("Africa", [
-        Country(c, vacc_data.get(c["iso_code"], None))
-        for c in continents["Africa"]
-    ], "Country")
-    svg_asia = draw_diagram("Asia", [
-        Country(c, vacc_data.get(c["iso_code"], None))
-        for c in continents["Asia"]
-    ], "Country")
-    svg_south_america = draw_diagram("South America", [
-        Country(c, vacc_data.get(c["iso_code"], None))
-        for c in continents["South America"]
-    ], "Country")
-    svg_oce = draw_diagram("Oceania", [
-        Country(c, vacc_data.get(c["iso_code"], None))
-        for c in continents["Oceania"]
-    ], "Country")
-    svg_middle_east = draw_diagram("Middle East", [
-        Country(c, vacc_data.get(c["iso_code"], None))
-        for c in continents["Middle East"]
-    ], "Country")
-
     os.makedirs("results", exist_ok=True)
-    with open("results/world.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_world))
-    with open("results/europe.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_europe))
-    with open("results/north_america.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_north_america))
-    with open("results/usa.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_usa))
-    with open("results/africa.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_africa))
-    with open("results/asia.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_asia))
-    with open("results/south_america.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_south_america))
-    with open("results/oce.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_oce))
-    with open("results/middle_east.svg", "wb") as result_h:
-        result_h.write(ET.tostring(svg_middle_east))
+
+    for (Model, CountryDP, USStateDP) in [
+            (ModelFull, Country, USState),
+            (ModelPartial, CountryPartial, USStatePartial)
+        ]:
+        draw_diagram(Model("Country and Region", "Worldwide", "world"), [
+            Region(r, [
+                CountryDP(c, vacc_data.get(c["iso_code"], None))
+                for c in cs
+            ]) for r,cs in continents.items()
+        ])
+
+        draw_diagram(Model("Country", "Europe", "europe"), [
+            CountryDP(c, vacc_data.get(c["iso_code"], None))
+            for c in continents["Europe"]
+        ])
+
+        north_america = [
+            CountryDP(c, vacc_data.get(c["iso_code"], None))
+            for c in continents["North America"]
+            if c["iso_code"] != "USA"
+        ]
+        north_america.append(Region("United States", [
+            USStateDP(sd) for sd in vacc_usa_data.values()
+        ]))
+        draw_diagram(Model("Country and US State", "North America", "north_america"),
+            north_america,
+        )
+
+        draw_diagram(Model("State", "United States", "usa"), [
+            USStateDP(sd) for sd in vacc_usa_data.values()
+        ])
+
+        draw_diagram(Model("Country", "Africa", "africa"), [
+            CountryDP(c, vacc_data.get(c["iso_code"], None))
+            for c in continents["Africa"]
+        ])
+
+        draw_diagram(Model("Country", "Asia", "asia"), [
+            CountryDP(c, vacc_data.get(c["iso_code"], None))
+            for c in continents["Asia"]
+        ])
+
+        draw_diagram(Model("Country", "South America", "south_america"), [
+            CountryDP(c, vacc_data.get(c["iso_code"], None))
+            for c in continents["South America"]
+        ])
+
+        draw_diagram(Model("Country", "Oceania", "oce"), [
+            CountryDP(c, vacc_data.get(c["iso_code"], None))
+            for c in continents["Oceania"]
+        ])
+
+        draw_diagram(Model("Country", "Middle East", "middle_east"), [
+            CountryDP(c, vacc_data.get(c["iso_code"], None))
+            for c in continents["Middle East"]
+        ])
 
 if __name__ == "__main__":
     main()
