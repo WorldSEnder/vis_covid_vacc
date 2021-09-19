@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-664 -684 1328 1388"><style>
+text {
+    font-family: "Open Sans";
+}
+.legend, .sources {
+    font-size: 10pt;
+}
+.title {
+    font-size: 20pt;
+    font-weight: bold;
+}
+.label_all {
+    font-size: 18pt;
+}
+.label {
+}
+.small-label-9 {
+   font-size: 9pt;
+}
+.small-label-8 {
+   font-size: 8pt;
+}
+.small-label-7 {
+   font-size: 7pt;
+}
+.small-label-6 {
+   font-size: 6pt;
+}
+.small-label-5 {
+   font-size: 5pt;
+}
+.small-label-4 {
+   font-size: 4pt;
+}
+a {
+    text-decoration: underline;
+}
+</style><style type="text/css">
+@font-face{
+  font-family:'Open Sans';src:local('Open Sans')
+             , local('OpenSans')
+             , url(https://fonts.gstatic.com/s/opensans/v18/mem5YaGs126MiZpBA-UN_r8OUuhp.woff2) format('woff2');
+  }
+</style><defs><pattern id="diagonalHatch" width="10" height="10" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+  <line x1="0" y1="0" x2="0" y2="10" style="stroke:#444; stroke-width:1"/>
+</pattern></defs><circle cx="0" cy="0" r="199.0" stroke="#aaa" stroke-width="2" fill="none"/><path d="M2.4554168322904432e-14 -401.0A401.0 401.0 0 0 1 17.316401160836676 400.625938065469" stroke="#aaa" stroke-width="2" fill="none"/><path d="M17.316401160836676 400.625938065469A401.0 401.0 0 0 1 -258.04842687990015 306.9397487859936" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-258.04842687990015 306.9397487859936A401.0 401.0 0 0 1 -392.07342849229315 84.13932891519079" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-392.07342849229315 84.13932891519079A401.0 401.0 0 0 1 -386.2989995012068 -107.58291213927349" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-386.2989995012068 -107.58291213927349A401.0 401.0 0 0 1 -309.97528665011714 -254.39402836186568" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-309.97528665011714 -254.39402836186568A401.0 401.0 0 0 1 -228.20253251651997 -329.7341416248045" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-228.20253251651997 -329.7341416248045A401.0 401.0 0 0 1 -136.13940259049735 -377.1830630639484" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-136.13940259049735 -377.1830630639484A401.0 401.0 0 0 1 -69.83977509008126 -394.87137882526616" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-69.83977509008126 -394.87137882526616A401.0 401.0 0 0 1 -28.256717889274004 -400.00319735487864" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-28.256717889274004 -400.00319735487864A401.0 401.0 0 0 1 -8.044644112942027 -400.91929823980297" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-8.044644112942027 -400.91929823980297A401.0 401.0 0 0 1 -3.456450411264949 -400.9851031529157" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-3.456450411264949 -400.9851031529157A401.0 401.0 0 0 1 -0.02048374848677724 -400.999999476828" stroke="#aaa" stroke-width="2" fill="none"/><path d="M-0.02048374848677724 -400.999999476828A401.0 401.0 0 0 1 -7.366250496871329e-14 -401.0" stroke="#aaa" stroke-width="2" fill="none"/><g><circle fill="#279ee3" r="151.27724334381938"/><path d="M0.5000000000000009 -199.99937499902342L0.499999999999985 -348.38790038321366A348.38825917849755 348.38825917849755 0 0 1 15.54398406895275 348.04132469103166L9.136115656938726 199.79121950351833A200 200 0 0 0 0.5000000000000009 -199.99937499902342" fill="#006e00"/><path d="M8.137048479718127 199.8344025488072L13.011613210003425 312.6105532970403A312.8812236472627 312.8812236472627 0 0 1 -200.9599366443149 239.8119345965112L-128.31933720964642 153.40843424687264A200 200 0 0 0 8.137048479718127 199.8344025488072" fill="#00bbad"/><path d="M-129.0847729921552 152.76492196038907L-219.66937807306516 260.51220127379236A340.76567121047293 340.76567121047293 0 0 1 -333.07469211638517 71.98952803775957L-195.4423216651505 42.453491047684736A200 200 0 0 0 -129.0847729921552 152.76492196038907" fill="#d163e6"/><path d="M-195.65214542803128 41.47575182451186L-284.22196971888405 60.48291996295462A290.5861519035748 290.5861519035748 0 0 1 -280.06674571791416 -77.4785752392535L-192.8013713692246 -53.17547553286517A200 200 0 0 0 -195.65214542803128 41.47575182451186" fill="#b24502"/><path d="M-192.53308480528625 -54.13881468374107L-252.03680032500554 -70.71039008772622A261.7680423283658 261.7680423283658 0 0 1 -202.66501982693572 -165.67859766117311L-154.91785688116585 -126.49291529309703A200 200 0 0 0 -192.53308480528625 -54.13881468374107" fill="#ff9287"/><path d="M-154.28345780794416 -127.26592099546646L-280.14721994286197 -230.561218566794A362.82356641860963 362.82356641860963 0 0 1 -206.88789317662201 -298.0576118901476L-114.22750859678486 -164.1708752482347A200 200 0 0 0 -154.28345780794416 -127.26592099546646" fill="#5954d6"/><path d="M-113.40522894186012 -164.73995887047045L-189.84653584640253 -275.19144439472893A334.3232541133455 334.3232541133455 0 0 1 -113.9728396944979 -314.29640477248364L-68.37004230017928 -187.95089070252286A200 200 0 0 0 -113.40522894186012 -164.73995887047045" fill="#00c6f8"/><path d="M-67.42943615787512 -188.2903904596064L-96.86458866286445 -269.84239357057976A286.7013531616577 286.7013531616577 0 0 1 -50.425344794303435 -282.23208624658747L-35.32505500623756 -196.85563362222146A200 200 0 0 0 -67.42943615787512 -188.2903904596064" fill="#878500"/><path d="M-34.34033835081289 -197.02979764987754L-49.50230502043955 -282.7549689697439A287.055483625409 287.055483625409 0 0 1 -20.726272103456935 -286.3062561735439L-14.591839192159547 -199.4669853108282A200 200 0 0 0 -34.34033835081289 -197.02979764987754" fill="#00a76c"/><path d="M-13.594324984291953 -199.5374509414748L-25.25237248086963 -364.56922468885244A365.44274778156915 365.44274778156915 0 0 1 -7.831206351620255 -365.3588292531356L-4.512178164084522 -199.94909414202294A200 200 0 0 0 -13.594324984291953 -199.5374509414748" fill="#bdbdbd"/><path d="M-3.512379415356768 -199.96915559866372L-5.580633725536092 -303.04432647969105A303.0957064762023 303.0957064762023 0 0 1 -3.112534676807199 -303.0797245151741L-2.2238914552233875 -199.9876353847792A200 200 0 0 0 -3.512379415356768 -199.96915559866372" fill="#ebac23"/><path d="M-1.2239286044679207 -199.99625496186465L-1.997893235400433 -289.7844047816127A289.791291849865 289.791291849865 0 0 1 -0.5148029995979453 -289.790834585715L-0.5102163008314711 -199.99934919725706A200 200 0 0 0 -1.2239286044679207 -199.99625496186465" fill="#b80058"/><path d="M0.4897836978639268 -199.9994002789241L0.48161602321397684 -359.8938420837674A359.89416433697494 359.89416433697494 0 0 1 -0.5000000000001172 -359.89381701247595L-0.5000000000000698 -199.99937499902342A200 200 0 0 0 0.4897836978639268 -199.9994002789241" fill="#008cf9"/></g><g><defs><path d="M99.9766767106364 -2.159655967253974L499.88338355318194 -10.79827983626987" stroke="#aaa" stroke-width="2" fill="none" id="textpath-6339104733357941047"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath-6339104733357941047" startOffset="50%"><tspan>Brazil | 67.8%</tspan></textPath></text><defs><path d="M-161.04712556197686 473.35380356370314L-32.20942511239537 94.67076071274063" stroke="#aaa" stroke-width="2" fill="none" id="textpath--8542838484464530501"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath--8542838484464530501" startOffset="50%"><tspan>Colombia | 48.2%</tspan></textPath></text><defs><path d="M-428.45370038065414 257.7351870236671L-85.69074007613082 51.54703740473342" stroke="#aaa" stroke-width="2" fill="none" id="textpath--4919394361067779836"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath--4919394361067779836" startOffset="50%"><tspan>Argentina | 63.4%</tspan></textPath></text><defs><path d="M-499.77336981440556 -15.052535479227075L-99.95467396288112 -3.010507095845415" stroke="#aaa" stroke-width="2" fill="none" id="textpath-8886599259238151242"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath-8886599259238151242" startOffset="50%"><tspan>Peru | 37.0%</tspan></textPath></text><defs><path d="M-443.6307458661974 -230.63339160278022L-88.72614917323948 -46.12667832055604" stroke="#aaa" stroke-width="2" fill="none" id="textpath-5808961049398558248"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath-5808961049398558248" startOffset="50%"><tspan>Venezuela | 23.8%</tspan></textPath></text><defs><path d="M-338.7940809142047 -367.7207782237758L-67.75881618284095 -73.54415564475516" stroke="#aaa" stroke-width="2" fill="none" id="textpath-4669245909673096649"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath-4669245909673096649" startOffset="50%"><tspan>Chile | 76.4%</tspan></textPath></text><defs><path d="M-229.06398052601065 -444.4431266490454L-45.81279610520213 -88.88862532980907" stroke="#aaa" stroke-width="2" fill="none" id="textpath--5270010907457448793"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath--5270010907457448793" startOffset="50%"><tspan>Ecuador | 59.8%</tspan></textPath></text><defs><path d="M-128.88857133216874 -483.10220055382945L-25.777714266433748 -96.6204401107659" stroke="#aaa" stroke-width="2" fill="none" id="textpath-483756863960811019"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath-483756863960811019" startOffset="50%"><tspan>Bolivia | 35.2%</tspan></textPath></text><defs><path d="M-61.24104376855426 -496.23536205931356L-12.248208753710852 -99.24707241186272" stroke="#aaa" stroke-width="2" fill="none" id="textpath-8879401367463902397"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath-8879401367463902397" startOffset="50%"><tspan>Paraguay | 35.3%</tspan></textPath></text><defs><path d="M-22.638977256697295 -499.4872137590418L-4.527795451339459 -99.89744275180837" stroke="#aaa" stroke-width="2" fill="none" id="textpath-1394560195536306037"/></defs><text text-anchor="middle" dominant-baseline="middle" class="label"><textPath href="#textpath-1394560195536306037" startOffset="50%"><tspan>Uruguay | 78.0%</tspan></textPath></text></g><text y="654" class="legend">
+            <tspan x="-654">* Showing percentage of population vaccinated, having received at least one shot of a countries chosen vaccine(s).</tspan>
+            <tspan x="-654" dy="1.2em">Countries where no data was available are not counted towards a region's percentage.</tspan>
+            </text><text y="-654" class="title" text-anchor="middle">
+            <tspan x="0">Partial Covid Vaccinations* by Country</tspan>
+            </text><text xmlns:xlink="http://www.w3.org/1999/xlink" y="654" class="sources" text-anchor="end">
+    <tspan x="654">Data source:
+        <a xlink:href="https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations">
+            <tspan>https://github.com/owid/covid-19-data/tree/master/public/data/vaccinations</tspan>
+        </a>
+    </tspan>
+    <tspan x="654" dy="1.2em">Code source:
+        <a xlink:href="https://github.com/WorldSEnder/vis_covid_vacc">
+            <tspan>https://github.com/WorldSEnder/vis_covid_vacc</tspan>
+        </a>
+    </tspan>
+    <tspan x="654" dy="1.2em">Timestamp: Sun Sep 19 02:00:22 2021 +0000</tspan>
+</text><text text-anchor="middle" dominant-baseline="middle" class="label_all" x="0" y="0">
+    <tspan>South America | 58.4%</tspan>
+</text></svg>
