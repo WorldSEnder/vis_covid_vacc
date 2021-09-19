@@ -696,7 +696,7 @@ def main():
             d["iso_code"]: d for d in vacc_reader
         }
 
-    latest_cdc_data = max(glob.glob("covid-19-data/scripts/scripts/vaccinations/us_states/input/cdc_data_*"))
+    latest_cdc_data = max(glob.glob("covid-19-data/scripts/input/cdc/vaccinations/cdc_data_*"))
     print(f"Using cdc file {latest_cdc_data}")
     with open(latest_cdc_data) as states_data_h:
         vacc_usa_reader = csv.DictReader(states_data_h)
